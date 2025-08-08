@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * Time: 2:48 PM
  */
 
-@FeignClient(name = "currency-exchange", url = "localhost:8000")
+@FeignClient(name = "currency-exchange-service", url = "localhost:8000")
 public interface CurrencyExchangeProxy {
 
     @GetMapping("api/v1/currency-exchange/from/{from}/to/{to}")

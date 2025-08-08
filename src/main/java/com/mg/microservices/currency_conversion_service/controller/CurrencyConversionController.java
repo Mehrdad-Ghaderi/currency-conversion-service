@@ -1,6 +1,7 @@
 package com.mg.microservices.currency_conversion_service.controller;
 
 import com.mg.microservices.currency_conversion_service.bean.CurrencyConversion;
+import com.mg.microservices.currency_conversion_service.exception.CurrencyPairNotFoundException;
 import com.mg.microservices.currency_conversion_service.proxy.CurrencyExchangeProxy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,13 +44,17 @@ public class CurrencyConversionController {
 
         CurrencyConversion currencyConversion = responseEntity.getBody();
 
+        if (currencyConversion != null) {
+            throw new CurrencyPairNotFoundException(from, to);
+        }
+
         return new CurrencyConversion(currencyConversion.getId(),
                 from,
                 to,
                 quantity,
                 currencyConversion.getRate(),
                 quantity.multiply(currencyConversion.getRate()),
-                currencyConversion.getServerEnvironment());
+                currencyConversion.getServerEnvironment() + " through REST Template");
     }
 
     @GetMapping("currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
@@ -65,7 +70,7 @@ public class CurrencyConversionController {
                 quantity,
                 currencyConversion.getRate(),
                 quantity.multiply(currencyConversion.getRate()),
-                currencyConversion.getServerEnvironment());
+                currencyConversion.getServerEnvironment() + " through Feign");
     }
 
 }
