@@ -1,6 +1,7 @@
 package com.mg.microservices.currency_conversion_service.controller;
 
 import com.mg.microservices.currency_conversion_service.bean.CurrencyConversion;
+import com.mg.microservices.currency_conversion_service.proxy.CurrencyExchangeProxy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,12 @@ import java.util.HashMap;
 @RequestMapping("/api/v1")
 public class CurrencyConversionController {
 
+    private final CurrencyExchangeProxy proxy;
+
+    public CurrencyConversionController(CurrencyExchangeProxy proxy) {
+        this.proxy = proxy;
+    }
+
     @GetMapping("currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion convert(@PathVariable("from") String from,
                                       @PathVariable("to") String to,
@@ -35,6 +42,22 @@ public class CurrencyConversionController {
         );
 
         CurrencyConversion currencyConversion = responseEntity.getBody();
+
+        return new CurrencyConversion(currencyConversion.getId(),
+                from,
+                to,
+                quantity,
+                currencyConversion.getRate(),
+                quantity.multiply(currencyConversion.getRate()),
+                currencyConversion.getServerEnvironment());
+    }
+
+    @GetMapping("currency-conversion-feign/from/{from}/to/{to}/quantity/{quantity}")
+    public CurrencyConversion convertFeign(@PathVariable("from") String from,
+                                      @PathVariable("to") String to,
+                                      @PathVariable("quantity") BigDecimal quantity) {
+
+        CurrencyConversion currencyConversion = proxy.getCurrencyExchangePair(from, to);
 
         return new CurrencyConversion(currencyConversion.getId(),
                 from,
