@@ -37,14 +37,14 @@ public class CurrencyConversionController {
         uriVariables.put("from", from);
         uriVariables.put("to", to);
         ResponseEntity<CurrencyConversion> responseEntity = new RestTemplate().getForEntity(
-                "http://localhost:8000/api/v1/currency-exchange/from/USD/to/CAD",
+                "http://localhost:8000/api/v1/currency-exchange/from/{from}/to/{to}",
                 CurrencyConversion.class,
                 uriVariables
         );
 
         CurrencyConversion currencyConversion = responseEntity.getBody();
 
-        if (currencyConversion != null) {
+        if (currencyConversion == null) {
             throw new CurrencyPairNotFoundException(from, to);
         }
 
