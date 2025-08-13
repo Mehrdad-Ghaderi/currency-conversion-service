@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 //@FeignClient(name = "currency-exchange-service", url = "localhost:8000")
     //remove the url to make load balancing work
-@FeignClient(name = "currency-exchange-service")
+@FeignClient(name = "currency-exchange")
 public interface CurrencyExchangeProxy {
 
     @GetMapping("api/v1/currency-exchange/from/{from}/to/{to}")
