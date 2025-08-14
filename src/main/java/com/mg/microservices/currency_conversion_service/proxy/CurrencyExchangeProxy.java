@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.PathVariable;
  * Created by Mehrdad Ghaderi, S&M
  * Date: 8/8/2025
  * Time: 2:48 PM
+ *
+ * CurrencyExchangeProxy makes a call to currency-exchange-service application
  */
 
-//@FeignClient(name = "currency-exchange-service", url = "localhost:8000")
-    //remove the url to make load balancing work
+//@FeignClient(name = "currency-exchange", url = "localhost:8000")
+// the url has been removed to make load balancing work
 @FeignClient(name = "currency-exchange")
 public interface CurrencyExchangeProxy {
 
